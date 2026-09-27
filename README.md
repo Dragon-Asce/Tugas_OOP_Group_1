@@ -1,10 +1,10 @@
 #  Sistem Manajemen E-Commerce (Tugas OOP Kelompok 1)
 
 <p align="center">
-  <a href="https://kotlinlang.org/"><img src="https://img.shields.io/badge/Kotlin-2.1%2B-7F52FF?logo=kotlin&logoColor=white" alt="Kotlin"></a>
-  <a href="https://openjdk.org/"><img src="https://img.shields.io/badge/Java%20SDK-17%2B%20%7C%2021%2B%20%7C%2025-ED8B00?logo=openjdk&logoColor=white" alt="Java"></a>
-  <a href="https://kotlinlang.org/docs/jvm-get-started.html"><img src="https://img.shields.io/badge/OOP-Encapsulation%20%7C%20Inheritance%20%7C%20Polymorphism%20%7C%20Abstraction-00C7B7" alt="OOP"></a>
-  <a href="https://polman-bandung.ac.id/"><img src="https://img.shields.io/badge/Academic-Politeknik%20Manufaktur%20Bandung-005691" alt="License"></a>
+  <a href="https://kotlinlang.org" target="_blank" rel="noopener noreferrer"><img src="https://shields.io" alt="Kotlin"></a>
+  <a href="https://openjdk.org" target="_blank" rel="noopener noreferrer"><img src="https://shields.io" alt="Java"></a>
+  <a href="https://kotlinlang.orgdocs/jvm-get-started.html" target="_blank" rel="noopener noreferrer"><img src="https://shields.io" alt="OOP"></a>
+  <a href="https://polman-bandung.ac.id" target="_blank" rel="noopener noreferrer"><img src="https://shields.io" alt="License"></a>
 </p>
 
 Implementasi komprehensif **Sistem Manajemen E-Commerce** berbasis bahasa pemrograman **Kotlin** untuk memenuhi Tugas Praktikum Kelompok Mata Kuliah Pemrograman Berorientasi Objek (PBO). Sistem ini mengintegrasikan secara utuh **empat pilar utama OOP** (Enkapsulasi, Pewarisan, Polimorfisme, dan Abstraksi), fitur tingkat lanjut Kotlin (*Sealed Classes*, *Smart Casting*, *Safe Casting*), serta standarisasi dokumentasi kode menggunakan **KDoc**.
