@@ -328,7 +328,7 @@ Pastikan komputer Anda telah terinstal **Kotlin Compiler** (`kotlinc`) dan **Jav
 
 1. Buka PowerShell atau Command Prompt pada root direktori proyek:
    ```powershell
-   cd "D:\1. Polman\1. Semester III\Pemrograman Berorientasi Objek\Tugas_OOP_Group_1"
+   cd "Tugas_OOP_Group_1
    ```
 
 2. Lakukan kompilasi seluruh file sumber Kotlin ke dalam satu berkas JAR:
