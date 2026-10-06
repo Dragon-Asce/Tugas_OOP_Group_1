@@ -298,4 +298,78 @@ classDiagram
 | **QRIS** | 0.5% dari nominal belanja | Panjang kode payload QR $\ge$ 10 karakter |
 | **Transfer Bank** | 1% dari nominal belanja | Minimum biaya Rp 5.000 & nomor rekening $\ge$ 8 digit |
 
+
 ---
+
+## 🚀 Panduan Menjalankan Program
+
+### 📥 Langkah Awal: Clone Repositori dari GitHub
+Buka terminal / command prompt pada direktori kerja Anda, lalu jalankan perintah berikut:
+```bash
+git clone https://github.com/Dragon-Asce/Tugas_OOP_Group_1.git
+cd Tugas_OOP_Group_1
+```
+
+---
+
+### Cara 1: Menggunakan IntelliJ IDEA (Direkomendasikan)
+1. Buka IntelliJ IDEA, pilih menu **File** ➔ **Open...**, lalu arahkan ke folder hasil clone `Tugas_OOP_Group_1`.
+2. Repositori ini telah dilengkapi konfigurasi `.idea` dan `.iml` yang sudah mendaftarkan folder `src/` sebagai **Sources Root** dan menautkan library **KotlinJavaRuntime**.
+3. Di toolbar pojok kanan atas, profil **`MainKt`** sudah otomatis tersedia. Anda cukup klik tombol panah hijau ▶️ (**Run**).
+4. *Alternatif*: Buka berkas [`src/Main.kt`](src/Main.kt), lalu klik ikon panah hijau ▶️ pada baris fungsi `fun main()`.
+
+> [!NOTE]
+> Jika folder `src` belum berwarna biru di Project Explorer setelah di-clone, cukup **klik kanan folder `src`** ➔ pilih **Mark Directory as** ➔ **Sources Root**.
+
+---
+
+### Cara 2: Menggunakan Terminal / Command Line (`kotlinc`)
+Pastikan komputer Anda telah terinstal **Kotlin Compiler** (`kotlinc`) dan **Java Runtime Environment** (JRE / JDK 17+).
+
+1. Buka PowerShell atau Command Prompt pada root direktori proyek:
+   ```powershell
+   cd "D:\1. Polman\1. Semester III\Pemrograman Berorientasi Objek\Tugas_OOP_Group_1"
+   ```
+
+2. Lakukan kompilasi seluruh file sumber Kotlin ke dalam satu berkas JAR:
+   ```powershell
+   $files = (Get-ChildItem -Path src -Filter *.kt -Recurse).FullName
+   kotlinc $files -include-runtime -d build/ecommerce.jar
+   ```
+
+3. Jalankan aplikasi menggunakan Java:
+   ```powershell
+   java -jar build/ecommerce.jar
+   ```
+
+---
+
+##  14 Skenario Demonstrasi (`Main.kt`)
+
+Fungsi utama program di `Main.kt` mengeksekusi 14 skenario pengujian komprehensif:
+
+```
+====================================================
+        SELAMAT DATANG DI TOKO ONLINE KAMPUS
+====================================================
+
+>>> 1. Inisialisasi Sistem Toko Online Kampus
+>>> 2. Penambahan 6 Produk (2 Elektronik, 2 Pakaian, 2 Makanan)
+>>> 3. Registrasi User 'budi' dan 'siti' (Serta uji validasi duplikasi username)
+>>> 4. Menampilkan Katalog Lengkap Seluruh Produk
+>>> 5. User 1 (Budi) Menambah Barang ke Keranjang (Uji validasi kuantitas melebihi stok)
+>>> 6. Menampilkan Rincian Keranjang Belanja Budi
+>>> 7. Checkout Budi menggunakan Kartu Kredit (Kalkulasi fee 2%)
+>>> 8. Rincian Order Budi & Uji Transisi Status Pesanan (Pending ➔ Paid ➔ Shipped ➔ Delivered) Serta uji proteksi pembatalan saat status sudah final
+>>> 9. User 2 (Siti) Belanja & Checkout menggunakan QRIS (Kalkulasi fee 0.5%)
+>>> 10. Menampilkan Laporan Penjualan Toko (Total Order, Omset Revenue, Rekap Transaksi)
+>>> 11. Demonstrasi Polimorfisme (Iterasi List<Product>, Dynamic Dispatch kalkulasi diskon)
+>>> 12. Demonstrasi Sealed Class (Evaluasi exhaustive 'when' pada OrderStatus)
+>>> 13. Demonstrasi Enkapsulasi (Uji proteksi password, protected price, private set)
+>>> 14. Demonstrasi Smart Casting (Pemeriksaan 'is' otomatis cast & safe cast 'as?')
+========================================================
+   SELURUH DEMONSTRASI FITUR OOP BERHASIL DIJALANKAN!
+========================================================
+```
+
+
