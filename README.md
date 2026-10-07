@@ -336,9 +336,9 @@ Tugas_OOP_Group_1/
 
 ---
 
-## 🚀 Panduan Menjalankan Program
+##  Panduan Menjalankan Program
 
-### 📥 Langkah Awal: Clone Repositori dari GitHub
+###  Langkah Awal: Clone Repositori dari GitHub
 Buka terminal / command prompt pada direktori kerja Anda, lalu jalankan perintah berikut:
 ```bash
 git clone https://github.com/Dragon-Asce/Tugas_OOP_Group_1.git
