@@ -18,7 +18,7 @@ Implementasi komprehensif **Sistem Manajemen E-Commerce** berbasis bahasa pemrog
 - **Jurusan**: Teknik Otomasi Manufaktur dan Mekatronika
 - **Program Studi**: Teknologi Rekayasa Informatika Industri
 - **Kelas**: 2 AEC-1
-- **Semester**: Ganjil 2026/2027
+- **Semester**: Gasal 2026/2027
 - **Mata Kuliah**: Pemrograman Berorientasi Objek (PBO)
 - **Kelompok**: Kelompok 1
 
