@@ -1,10 +1,11 @@
-#  Sistem Manajemen E-Commerce (Tugas OOP Kelompok 1)
+#  Sistem Manajemen E-Commerce
 
 <p align="center">
   <a href="https://kotlinlang.org/"><img src="https://img.shields.io/badge/Kotlin-2.1%2B-7F52FF?logo=kotlin&logoColor=white" alt="Kotlin"></a>
   <a href="https://openjdk.org/"><img src="https://img.shields.io/badge/Java%20SDK-17%2B%20%7C%2021%2B%20%7C%2025-ED8B00?logo=openjdk&logoColor=white" alt="Java"></a>
   <a href="https://kotlinlang.org/docs/jvm-get-started.html"><img src="https://img.shields.io/badge/OOP-Encapsulation%20%7C%20Inheritance%20%7C%20Polymorphism%20%7C%20Abstraction-00C7B7" alt="OOP"></a>
-  <a href="https://polman-bandung.ac.id/"><img src="https://img.shields.io/badge/Academic-Politeknik%20Manufaktur%20Bandung-005691" alt="License"></a>
+  <a href="https://polman-bandung.ac.id/"><img src="https://img.shields.io/badge/Academic-Politeknik%20Manufaktur%20Bandung-005691" alt="Academic"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT"></a>
 </p>
 
 Implementasi komprehensif **Sistem Manajemen E-Commerce** berbasis bahasa pemrograman **Kotlin** untuk memenuhi Tugas Praktikum Kelompok Mata Kuliah Pemrograman Berorientasi Objek (PBO). Sistem ini mengintegrasikan secara utuh **empat pilar utama OOP** (Enkapsulasi, Pewarisan, Polimorfisme, dan Abstraksi), fitur tingkat lanjut Kotlin (*Sealed Classes*, *Smart Casting*, *Safe Casting*), serta standarisasi dokumentasi kode menggunakan **KDoc**.
@@ -13,11 +14,13 @@ Implementasi komprehensif **Sistem Manajemen E-Commerce** berbasis bahasa pemrog
 
 ##  Informasi Proyek & Anggota Tim
 
-- **Institusi**: Politeknik Manufaktur Bandung
+- **Politeknik Manufaktur Bandung**
 - **Jurusan**: Teknik Otomasi Manufaktur dan Mekatronika
-- **Program Studi**: D4 Teknologi Rekayasa Informatika Industri
+- **Program Studi**: Teknologi Rekayasa Informatika Industri
+- **Kelas**: 2 AEC-1
+- **Semester**: Ganjil 2026/2027
 - **Mata Kuliah**: Pemrograman Berorientasi Objek (PBO)
-- **Kelompok**: Kelompok 1 (Group 1)
+- **Kelompok**: Kelompok 1
 
 ###  Daftar Anggota Kelompok:
 
@@ -298,6 +301,38 @@ classDiagram
 | **QRIS** | 0.5% dari nominal belanja | Panjang kode payload QR $\ge$ 10 karakter |
 | **Transfer Bank** | 1% dari nominal belanja | Minimum biaya Rp 5.000 & nomor rekening $\ge$ 8 digit |
 
+---
+
+##  Struktur Direktori Repositori
+
+```
+Tugas_OOP_Group_1/
+├── src/
+│   ├── Main.kt                                                               # Entry point & demonstrasi
+│   ├── product/
+│   │   ├── Product.kt                                                        # Abstract class induk produk
+│   │   ├── ElectronicProduct.kt                                              # Subclass produk elektronik
+│   │   ├── ClothingProduct.kt                                                # Subclass produk pakaian
+│   │   └── FoodProduct.kt                                                    # Subclass produk makanan
+│   ├── cart/
+│   │   └── ShoppingCart.kt                                                   # Manajemen keranjang belanja
+│   ├── order/
+│   │   ├── Order.kt                                                          # Entitas pesanan
+│   │   └── OrderStatus.kt                                                    # Sealed class status pesanan
+│   ├── payment/
+│   │   ├── PaymentMethod.kt                                                  # Interface pembayaran & sealed class PaymentResult
+│   │   ├── CreditCardPayment.kt                                              # Implementasi Kartu Kredit
+│   │   ├── QRISPayment.kt                                                    # Implementasi QRIS
+│   │   └── BankTransferPayment.kt                                            # Implementasi Transfer Bank
+│   ├── user/
+│   │   └── User.kt                                                           # Entitas pengguna & autentikasi
+│   └── system/
+│       └── ECommerceSystem.kt                                                # Main controller sistem e-commerce
+├── docs/                                                                     # Direktori laporan proyek
+│   └── Kelompok 1_Laporan Tugas Kelompok_Sistem Manajemen E-Commerce.pdf     # Laporan proyek
+├── LICENCE                                                                   # Lisensi proyek
+└── README.md                                                                 # Dokumentasi proyek
+```
 
 ---
 
@@ -328,7 +363,7 @@ Pastikan komputer Anda telah terinstal **Kotlin Compiler** (`kotlinc`) dan **Jav
 
 1. Buka PowerShell atau Command Prompt pada root direktori proyek:
    ```powershell
-   cd Tugas_OOP_Group_1
+   cd "...\Tugas_OOP_Group_1"
    ```
 
 2. Lakukan kompilasi seluruh file sumber Kotlin ke dalam satu berkas JAR:
@@ -371,5 +406,3 @@ Fungsi utama program di `Main.kt` mengeksekusi 14 skenario pengujian komprehensi
    SELURUH DEMONSTRASI FITUR OOP BERHASIL DIJALANKAN!
 ========================================================
 ```
-
-
