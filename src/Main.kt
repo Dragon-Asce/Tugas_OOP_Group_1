@@ -12,250 +12,179 @@ import product.FoodProduct
 import product.Product
 import system.ECommerceSystem
 import user.User
+import java.text.NumberFormat
+import java.util.Locale
 
-/**
- * File program utama untuk mendemonstrasikan implementasi seluruh spesifikasi
- * Sistem Manajemen E-Commerce berbasis OOP pada Tugas Kelompok PBO.
- *
- * Mendemonstrasikan 14 skenario fitur & pilar OOP:
- * 1. Inisialisasi Sistem
- * 2. Penambahan Produk (Elektronik, Pakaian, Makanan)
- * 3. Registrasi Pengguna
- * 4. Katalog Produk
- * 5. Pengelolaan Keranjang Belanja User 1
- * 6. Tampilan & Kalkulasi Diskon Keranjang User 1
- * 7. Proses Checkout & Pembayaran Kartu Kredit User 1
- * 8. Rincian & Transisi Status Pesanan User 1
- * 9. Belanja & Pembayaran QRIS User 2
- * 10. Rekapitulasi Laporan Penjualan Toko
- * 11. Demonstrasi Polimorfisme (Polymorphic references & dynamic dispatch)
- * 12. Demonstrasi Sealed Class (Exhaustive when & status guard)
- * 13. Demonstrasi Enkapsulasi (Data hiding & private accessors)
- * 14. Demonstrasi Smart Casting (`is` check & safe cast `as?`)
- */
+// Extension function untuk format mata uang Rupiah
+fun Double.toRupiah(): String {
+    val formatter = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
+    return formatter.format(this)
+}
+
+// Helper cetak pemisah seksi
+private fun printSection(title: String) {
+    println("\n" + "=".repeat(55))
+    println(title)
+    println("=".repeat(55))
+}
+
 fun main() {
     println("=".repeat(55))
     println("🛍️  SELAMAT DATANG DI TOKO ONLINE KAMPUS")
-    println("=".repeat(55))
-    println()
+    println("=".repeat(55))\n
 
-    // ============================================================
-    // 1. Inisialisasi Sistem
-    // ============================================================
-    println(">>> 1. INISIALISASI SISTEM E-COMMERCE <<<")
+    // 1. Inisialisasi Sistem & Data
     val system = ECommerceSystem("Toko Online Kampus")
+    println(">>> 1. INISIALISASI SISTEM E-COMMERCE <<<")
     println("Sistem '${system.name}' berhasil diinisialisasi.\n")
 
-    // ============================================================
-    // 2. Menambahkan Produk (Minimal 6 produk: 2 per kategori)
-    // ============================================================
+    val products = setupProducts(system)
+    setupUsers(system)
+
+    val userBudi = system.findUser("budi") ?: error("User budi tidak ditemukan")
+    val userSiti = system.findUser("siti") ?: error("User siti tidak ditemukan")
+
+    // 2. Transaksi User 1 (Budi) & User 2 (Siti)
+    runUserBudiFlow(system, userBudi, products)
+    runUserSitiFlow(system, userSiti, products)
+
+    // 3. Laporan Penjualan
+    println("--- LAPORAN PENJUALAN TOKO KAMPUS ---")
+    system.displaySalesReport()
+
+    // 4. Demonstrasi Pilar OOP
+    demonstratePolymorphism(products)
+    demonstrateSealedClass()
+    demonstrateEncapsulation(userBudi, products.laptopAsus)
+    demonstrateSmartCasting(products)
+
+    println("=".repeat(55))
+    println("🎉 SELURUH DEMONSTRASI FITUR OOP BERHASIL DIJALANKAN!")
+    println("=".repeat(55))
+}
+
+// Data Container untuk mempermudah passing referensi produk
+data class ProductCatalog(
+    val laptopAsus: ElectronicProduct,
+    val smartphoneXiaomi: ElectronicProduct,
+    val jaketWinter: ClothingProduct,
+    val kaosPolos: ClothingProduct,
+    val berasOrganik: FoodProduct,
+    val mieInstan: FoodProduct
+)
+
+private fun setupProducts(system: ECommerceSystem): ProductCatalog {
     println("--- MENAMBAHKAN PRODUK ---")
-    // Kategori Elektronik (1 premium, 1 non-premium)
-    val laptopAsus = ElectronicProduct(
-        id = "E001",
-        name = "Laptop Gaming ASUS ROG",
-        price = 15000000.0,
-        stock = 10,
-        brand = "ASUS",
-        warrantyMonths = 36,
-        isPremium = true
-    )
-    val smartphoneXiaomi = ElectronicProduct(
-        id = "E002",
-        name = "Smartphone Xiaomi Redmi",
-        price = 2500000.0,
-        stock = 15,
-        brand = "Xiaomi",
-        warrantyMonths = 12,
-        isPremium = false
+    val catalog = ProductCatalog(
+        laptopAsus = ElectronicProduct("E001", "Laptop Gaming ASUS ROG", 15000000.0, 10, "ASUS", 36, true),
+        smartphoneXiaomi = ElectronicProduct("E002", "Smartphone Xiaomi Redmi", 2500000.0, 15, "Xiaomi", 12, false),
+        jaketWinter = ClothingProduct("C001", "Jaket Musim Dingin Parka", 400000.0, 20, "XL", "Wol & Dacron", true),
+        kaosPolos = ClothingProduct("C002", "Kaos Polos Cotton Combed 30s", 100000.0, 50, "L", "Katun Combed", false),
+        berasOrganik = FoodProduct("F001", "Beras Organik Raja Pandan", 85000.0, 30, "2026-12-31", 5000.0, true),
+        mieInstan = FoodProduct("F002", "Mie Instan Goreng Spesial", 3500.0, 100, "2026-06-30", 85.0, false)
     )
 
-    // Kategori Pakaian (1 seasonal, 1 non-seasonal)
-    val jaketWinter = ClothingProduct(
-        id = "C001",
-        name = "Jaket Musim Dingin Parka",
-        price = 400000.0,
-        stock = 20,
-        size = "XL",
-        material = "Wol & Dacron",
-        isSeasonal = true
-    )
-    val kaosPolos = ClothingProduct(
-        id = "C002",
-        name = "Kaos Polos Cotton Combed 30s",
-        price = 100000.0,
-        stock = 50,
-        size = "L",
-        material = "Katun Combed",
-        isSeasonal = false
-    )
+    listOf(
+        catalog.laptopAsus, catalog.smartphoneXiaomi,
+        catalog.jaketWinter, catalog.kaosPolos,
+        catalog.berasOrganik, catalog.mieInstan
+    ).forEach { system.addProduct(it) }
 
-    // Kategori Makanan (1 organik, 1 non-organik)
-    val berasOrganik = FoodProduct(
-        id = "F001",
-        name = "Beras Organik Raja Pandan",
-        price = 85000.0,
-        stock = 30,
-        expiryDate = "2026-12-31",
-        weight = 5000.0,
-        isOrganic = true
-    )
-    val mieInstan = FoodProduct(
-        id = "F002",
-        name = "Mie Instan Goreng Spesial",
-        price = 3500.0,
-        stock = 100,
-        expiryDate = "2026-06-30",
-        weight = 85.0,
-        isOrganic = false
-    )
-
-    // Daftarkan semua produk ke sistem
-    system.addProduct(laptopAsus)
-    system.addProduct(smartphoneXiaomi)
-    system.addProduct(jaketWinter)
-    system.addProduct(kaosPolos)
-    system.addProduct(berasOrganik)
-    system.addProduct(mieInstan)
     println()
+    return catalog
+}
 
-    // ============================================================
-    // 3. Registrasi User (Minimal 2 user)
-    // ============================================================
+private fun setupUsers(system: ECommerceSystem) {
     println("--- REGISTRASI USER ---")
     system.registerUser("budi", "budi@kampus.ac.id", "rahasiaBudi123")
     system.registerUser("siti", "siti@kampus.ac.id", "sitiAman456")
     system.registerUser("budi", "budi.baru@kampus.ac.id", "passwordLain")
     println()
 
-    // Dapatkan instance user untuk simulasi transaksi
-    val userBudi = system.findUser("budi") ?: error("User budi tidak ditemukan")
-    val userSiti = system.findUser("siti") ?: error("User siti tidak ditemukan")
-
-    // ============================================================
-    // 4. Tampilkan Semua Produk
-    // ============================================================
     println("--- KATALOG SEMUA PRODUK ---")
     system.displayAllProducts()
     println()
+}
 
-    // ============================================================
-    // 5. User 1 (Budi): Menambahkan Produk ke Keranjang
-    // ============================================================
+private fun runUserBudiFlow(system: ECommerceSystem, user: User, products: ProductCatalog) {
     println("--- BUDI MENAMBAH BARANG KE KERANJANG ---")
-    val cartBudi = userBudi.getCart()
-    cartBudi.addItem(laptopAsus, 1)     // 1 unit Laptop Gaming
-    cartBudi.addItem(jaketWinter, 2)    // 2 unit Jaket Musim Dingin
-    cartBudi.addItem(mieInstan, 5)      // 5 bungkus Mie Instan
-    // Uji validasi penambahan stok melebihi batas
+    val cart = user.getCart()
+    cart.addItem(products.laptopAsus, 1)
+    cart.addItem(products.jaketWinter, 2)
+    cart.addItem(products.mieInstan, 5)
+
     println("Mencoba memesan barang melebihi stok yang tersedia:")
-    cartBudi.addItem(laptopAsus, 999)
+    cart.addItem(products.laptopAsus, 999)
     println()
 
-    // ============================================================
-    // 6. User 1 (Budi): Tampilkan Keranjang
-    // ============================================================
     println("--- TAMPILAN KERANJANG BELANJA BUDI ---")
-    cartBudi.displayCart()
+    cart.displayCart()
     println()
 
-    // ============================================================
-    // 7. User 1 (Budi): Checkout dengan Metode Pembayaran
-    // ============================================================
     println("--- CHECKOUT BUDI (KARTU KREDIT) ---")
-    val ccPayment = CreditCardPayment(
-        cardNumber = "4111222233334444",
-        expiryDate = "12/28",
-        cvv = "888"
-    )
-    val feeBudi = ccPayment.getFee(cartBudi.getTotalPrice())
+    val ccPayment = CreditCardPayment("4111222233334444", "12/28", "888")
     println("Metode Pembayaran: ${ccPayment.name}")
-    println("Biaya Layanan (${ccPayment.name}): Rp ${formatRupiah(feeBudi)}")
+    println("Biaya Layanan (${ccPayment.name}): ${ccPayment.getFee(cart.getTotalPrice()).toRupiah()}")
 
-    val orderBudi = userBudi.checkout(ccPayment)
-    if (orderBudi != null) {
-        system.addOrder(orderBudi)
-    }
-    println()
-
-    // ============================================================
-    // 8. Tampilkan Order User 1 & Demonstrasi Status Order
-    // ============================================================
-    println("--- STATUS DAN DETAIL ORDER BUDI ---")
-    userBudi.displayOrders()
-    println()
-    if (orderBudi != null) {
-        orderBudi.displayOrder()
+    val order = user.checkout(ccPayment)
+    order?.let {
+        system.addOrder(it)
+        println("\n--- STATUS DAN DETAIL ORDER BUDI ---")
+        user.displayOrders()
+        println()
+        it.displayOrder()
         println("\n>>> Demonstrasi Pembaruan Status Pesanan <<<")
-        orderBudi.updateStatus(OrderStatus.Paid)
-        orderBudi.updateStatus(OrderStatus.Shipped)
-        orderBudi.updateStatus(OrderStatus.Delivered)
+        it.updateStatus(OrderStatus.Paid)
+        it.updateStatus(OrderStatus.Shipped)
+        it.updateStatus(OrderStatus.Delivered)
         println("Mencoba mengubah status pesanan yang sudah berstatus final (Delivered):")
-        orderBudi.updateStatus(OrderStatus.Cancelled("Pelanggan ingin refund"))
+        it.updateStatus(OrderStatus.Cancelled("Pelanggan ingin refund"))
     }
     println()
+}
 
-    // ============================================================
-    // 9. User 2 (Siti): Belanja & Checkout dengan QRIS
-    // ============================================================
+private fun runUserSitiFlow(system: ECommerceSystem, user: User, products: ProductCatalog) {
     println("--- SITI MENAMBAH BARANG KE KERANJANG ---")
-    val cartSiti = userSiti.getCart()
-    cartSiti.addItem(berasOrganik, 2)       // 2 karung Beras Organik
-    cartSiti.addItem(kaosPolos, 3)          // 3 pcs Kaos Polos
-    cartSiti.displayCart()
+    val cart = user.getCart()
+    cart.addItem(products.berasOrganik, 2)
+    cart.addItem(products.kaosPolos, 3)
+    cart.displayCart()
     println()
 
     println("--- CHECKOUT SITI (QRIS) ---")
-    val qrisPayment = QRISPayment(
-        qrCode = "00020101021126580014ID.GO.QRIS.WWW.KAMPUS.NMID012345",
-        merchantId = "MERCHANT_KAMPUS_01"
-    )
-    val feeSiti = qrisPayment.getFee(cartSiti.getTotalPrice())
+    val qrisPayment = QRISPayment("00020101021126580014ID.GO.QRIS.WWW.KAMPUS.NMID012345", "MERCHANT_KAMPUS_01")
     println("Metode Pembayaran: ${qrisPayment.name}")
-    println("Biaya Layanan (${qrisPayment.name}): Rp ${formatRupiah(feeSiti)}")
+    println("Biaya Layanan (${qrisPayment.name}): ${qrisPayment.getFee(cart.getTotalPrice()).toRupiah()}")
 
-    val orderSiti = userSiti.checkout(qrisPayment)
-    if (orderSiti != null) {
-        system.addOrder(orderSiti)
-        orderSiti.updateStatus(OrderStatus.Paid)
-        orderSiti.updateStatus(OrderStatus.Shipped)
+    val order = user.checkout(qrisPayment)
+    order?.let {
+        system.addOrder(it)
+        it.updateStatus(OrderStatus.Paid)
+        it.updateStatus(OrderStatus.Shipped)
     }
     println()
-    userSiti.displayOrders()
+    user.displayOrders()
     println()
+}
 
-    // ============================================================
-    // 10. Tampilkan Laporan Penjualan Sistem
-    // ============================================================
-    println("--- LAPORAN PENJUALAN TOKO KAMPUS ---")
-    system.displaySalesReport()
-    println()
-
-    // ============================================================
-    // 11. Demonstrasi Polimorfisme (Polymorphism)
-    // ============================================================
-    println("=".repeat(55))
-    println("🧠 11. DEMONSTRASI PILAR OOP: POLIMORFISME")
-    println("=".repeat(55))
+private fun demonstratePolymorphism(products: ProductCatalog) {
+    printSection("🧠 11. DEMONSTRASI PILAR OOP: POLIMORFISME")
     println("Menampung berbagai jenis subclass ke dalam List<Product> (Polymorphic Reference):")
     val polymorphicProductList: List<Product> = listOf(
-        laptopAsus,
-        jaketWinter,
-        berasOrganik
+        products.laptopAsus,
+        products.jaketWinter,
+        products.berasOrganik
     )
 
     polymorphicProductList.forEach { product ->
-        val diskon = product.calculateDiscount()
-        val hargaAkhir = product.getDiscountedPrice()
         println("Produk: ${product.name}")
         println("  -> Kategori  : ${product.getCategory()}")
         println("  -> Harga Asli: ${product.formattedPrice}")
-        println("  -> Diskon    : Rp ${formatRupiah(diskon)}")
-        println("  -> Tagihan   : Rp ${formatRupiah(hargaAkhir)}")
+        println("  -> Diskon    : ${product.calculateDiscount().toRupiah()}")
+        println("  -> Tagihan   : ${product.getDiscountedPrice().toRupiah()}")
     }
-    println()
 
-    println("Polimorfisme pada gerbang pembayaran (PaymentMethod):")
+    println("\nPolimorfisme pada gerbang pembayaran (PaymentMethod):")
     val paymentList: List<PaymentMethod> = listOf(
         CreditCardPayment("1111222233334444", "10/27", "777"),
         QRISPayment("0123456789QRISPAY", "M_001"),
@@ -263,16 +192,12 @@ fun main() {
     )
     val testAmount = 500000.0
     paymentList.forEach { method ->
-        println("- ${method.name}: Fee untuk transaksi Rp ${formatRupiah(testAmount)} adalah Rp ${formatRupiah(method.getFee(testAmount))}")
+        println("- ${method.name}: Fee untuk transaksi ${testAmount.toRupiah()} adalah ${method.getFee(testAmount).toRupiah()}")
     }
-    println()
+}
 
-    // ============================================================
-    // 12. Demonstrasi Sealed Class
-    // ============================================================
-    println("=".repeat(55))
-    println("🔒 12. DEMONSTRASI SEALED CLASS (OrderStatus & PaymentResult)")
-    println("=".repeat(55))
+private fun demonstrateSealedClass() {
+    printSection("🔒 12. DEMONSTRASI SEALED CLASS (OrderStatus & PaymentResult)")
     val sampleStatuses: List<OrderStatus> = listOf(
         OrderStatus.Pending,
         OrderStatus.Paid,
@@ -292,97 +217,50 @@ fun main() {
         }
         println("Status [${status.display()}] -> $statusMessage (Final? ${if (status.isFinal()) '✅' else '❌'})")
     }
-    println()
+}
 
-    // ============================================================
-    // 13. Demonstrasi Enkapsulasi (Encapsulation)
-    // ============================================================
-    println("=".repeat(55))
-    println("🛡️  13. DEMONSTRASI PILAR OOP: ENKAPSULASI")
-    println("=".repeat(55))
+private fun demonstrateEncapsulation(user: User, laptop: ElectronicProduct) {
+    printSection("🛡️ 13. DEMONSTRASI PILAR OOP: ENKAPSULASI")
     println("1. Perlindungan Password Pengguna:")
     println("   - Properti 'password' pada kelas User di-set 'private'.")
-    println("   - Memverifikasi login dengan password salah ('salah123'): ${userBudi.authenticate("salah123")}")
-    println("   - Memverifikasi login dengan password benar ('rahasiaBudi123'): ${userBudi.authenticate("rahasiaBudi123")}")
-    println()
+    println("   - Memverifikasi login password salah ('salah123'): ${user.authenticate("salah123")}")
+    println("   - Memverifikasi login password benar ('rahasiaBudi123'): ${user.authenticate("rahasiaBudi123")}\n")
 
     println("2. Enkapsulasi Harga (Product.price):")
-    println("   - 'price' dienkapsulasi dengan access modifier protected sehingga tidak dapat dimodifikasi bebas dari luar kelas.")
-    println("   - Konsumen luar hanya dapat membaca harga terformat melalui 'formattedPrice': ${laptopAsus.formattedPrice}")
-    println()
+    println("   - 'price' dienkapsulasi dengan access modifier protected.")
+    println("   - Konsumen luar membaca via 'formattedPrice': ${laptop.formattedPrice}\n")
 
     println("3. Enkapsulasi Total Items pada Keranjang Belanja:")
     println("   - Properti 'totalItems' menggunakan 'private set'.")
-    println("   - Nilai total items saat ini: ${userBudi.getCart().totalItems} item.")
-    println("   - Pihak luar tidak dapat mengubah totalItems secara langsung tanpa melalui fungsi addItem/removeItem.")
-    println()
+    println("   - Nilai total items saat ini: ${user.getCart().totalItems} item.")
+}
 
-    // ============================================================
-    // 14. Demonstrasi Smart Casting & Safe Casting
-    // ============================================================
-    println("=".repeat(55))
-    println("⚡ 14. DEMONSTRASI SMART CASTING & SAFE CASTING")
-    println("=".repeat(55))
-
+private fun demonstrateSmartCasting(products: ProductCatalog) {
+    printSection("⚡ 14. DEMONSTRASI SMART CASTING & SAFE CASTING")
     val mixedCatalog: List<Any> = listOf(
-        laptopAsus,
-        jaketWinter,
-        berasOrganik,
+        products.laptopAsus,
+        products.jaketWinter,
+        products.berasOrganik,
         "Produk Promosi Tambahan"
     )
 
     println("A. Smart Casting Otomatis menggunakan pemeriksaan tipe 'is':")
     for (item in mixedCatalog) {
         when (item) {
-            is ElectronicProduct -> {
-                // Di dalam blok ini, 'item' otomatis di-smart-cast menjadi ElectronicProduct
-                println("✨ [Elektronik] Brand: ${item.brand}, Garansi: ${item.warrantyMonths} bulan, Premium: ${item.isPremium}")
-            }
-            is ClothingProduct -> {
-                // Di dalam blok ini, 'item' otomatis di-smart-cast menjadi ClothingProduct
-                println("✨ [Pakaian] Ukuran: ${item.size}, Bahan: ${item.material}, Seasonal: ${item.isSeasonal}")
-            }
-            is FoodProduct -> {
-                // Di dalam blok ini, 'item' otomatis di-smart-cast menjadi FoodProduct
-                println("✨ [Makanan] Berat: ${item.weight}g, Expired: ${item.expiryDate}, Organik: ${item.isOrganic}")
-            }
-            else -> {
-                println("ℹ️  [Objek Lain]: '$item' bukan turunan dari kelas Product.")
-            }
+            is ElectronicProduct -> println("✨ [Elektronik] Brand: ${item.brand}, Garansi: ${item.warrantyMonths} bulan, Premium: ${item.isPremium}")
+            is ClothingProduct -> println("✨ [Pakaian] Ukuran: ${item.size}, Bahan: ${item.material}, Seasonal: ${item.isSeasonal}")
+            is FoodProduct -> println("✨ [Makanan] Berat: ${item.weight}g, Expired: ${item.expiryDate}, Organik: ${item.isOrganic}")
+            else -> println("ℹ️  [Objek Lain]: '$item' bukan turunan dari kelas Product.")
         }
     }
-    println()
 
-    println("B. Safe Casting yang aman menggunakan operator 'as?':")
-    val testObj1: Any = laptopAsus
+    println("\nB. Safe Casting yang aman menggunakan operator 'as?':")
+    val testObj1: Any = products.laptopAsus
     val testObj2: Any = "Bukan produk elektronik"
 
-    val castResult1: ElectronicProduct? = testObj1 as? ElectronicProduct
-    val castResult2: ElectronicProduct? = testObj2 as? ElectronicProduct
+    val castResult1 = testObj1 as? ElectronicProduct
+    val castResult2 = testObj2 as? ElectronicProduct
 
     println("Hasil safe cast (testObj1 as? ElectronicProduct): ${castResult1?.name ?: "Gagal cast"}")
-    println("Hasil safe cast (testObj2 as? ElectronicProduct): ${castResult2?.name ?: "Gagal cast (mengembalikan null tanpa Crash/Exception)"}")
-
-    println()
-    println("=".repeat(55))
-    println("🎉 SELURUH DEMONSTRASI FITUR OOP BERHASIL DIJALANKAN!")
-    println("=".repeat(55))
+    println("Hasil safe cast (testObj2 as? ElectronicProduct): ${castResult2?.name ?: "Gagal cast (mengembalikan null tanpa Crash)"}")
 }
-
-/**
- * Helper fungsi mandiri di file Main untuk memformat mata uang Rupiah.
- */
-private fun formatRupiah(nominal: Double): String {
-    val str = nominal.toLong().toString()
-    val builder = StringBuilder()
-    var count = 0
-    for (i in str.length - 1 downTo 0) {
-        builder.insert(0, str[i])
-        count++
-        if (count % 3 == 0 && i > 0) {
-            builder.insert(0, ".")
-        }
-    }
-    return builder.toString()
-}
-
