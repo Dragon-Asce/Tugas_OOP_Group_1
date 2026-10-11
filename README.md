@@ -18,7 +18,7 @@ Implementasi komprehensif **Sistem Manajemen E-Commerce** berbasis bahasa pemrog
 - **Jurusan**: Teknik Otomasi Manufaktur dan Mekatronika
 - **Program Studi**: Teknologi Rekayasa Informatika Industri
 - **Kelas**: 2 AEC-1
-- **Semester**: Gasal 2026/2027
+- **Semester**: Ganjil 2026/2027
 - **Mata Kuliah**: Pemrograman Berorientasi Objek (PBO)
 - **Kelompok**: Kelompok 1
 
@@ -336,9 +336,9 @@ Tugas_OOP_Group_1/
 
 ---
 
-##  Panduan Menjalankan Program
+## Panduan Menjalankan Program
 
-###  Langkah Awal: Clone Repositori dari GitHub
+### Langkah Awal: Clone Repositori dari GitHub
 Buka terminal / command prompt pada direktori kerja Anda, lalu jalankan perintah berikut:
 ```bash
 git clone https://github.com/Dragon-Asce/Tugas_OOP_Group_1.git
@@ -348,33 +348,49 @@ cd Tugas_OOP_Group_1
 ---
 
 ### Cara 1: Menggunakan IntelliJ IDEA (Direkomendasikan)
-1. Buka IntelliJ IDEA, pilih menu **File** ➔ **Open...**, lalu arahkan ke folder hasil clone `Tugas_OOP_Group_1`.
-2. Repositori ini telah dilengkapi konfigurasi `.idea` dan `.iml` yang sudah mendaftarkan folder `src/` sebagai **Sources Root** dan menautkan library **KotlinJavaRuntime**.
-3. Di toolbar pojok kanan atas, profil **`MainKt`** sudah otomatis tersedia. Anda cukup klik tombol panah hijau ▶️ (**Run**).
-4. *Alternatif*: Buka berkas [`src/Main.kt`](src/Main.kt), lalu klik ikon panah hijau ▶️ pada baris fungsi `fun main()`.
+Karena repositori ini bersih tanpa berkas konfigurasi IDE bawaan, ikuti langkah mudah berikut saat pertama kali membuka proyek:
 
-> [!NOTE]
-> Jika folder `src` belum berwarna biru di Project Explorer setelah di-clone, cukup **klik kanan folder `src`** ➔ pilih **Mark Directory as** ➔ **Sources Root**.
+1. **Buka Proyek**:
+   - Buka IntelliJ IDEA, pilih menu **File** ➔ **Open...**, lalu arahkan ke folder hasil clone `Tugas_OOP_Group_1`.
+2. **Atur Sources Root (PENTING)**:
+   - Pada panel *Project Explorer* di sebelah kiri, cari folder **`src`**.
+   - **Klik kanan pada folder `src`** ➔ pilih **Mark Directory as** ➔ **Sources Root**.
+   - *(Folder `src` akan berubah warna menjadi **biru**, menandakan seluruh modul dan package Kotlin siap digunakan)*.
+3. **Konfigurasi Project SDK / JDK**:
+   - Pastikan JDK telah terpasang (Java 17, 21, atau versi terbaru).
+   - Jika muncul banner *"Project SDK is not defined"*, klik **Setup SDK** ➔ pilih JDK yang terpasang di komputer Anda (atau akses via **File** ➔ **Project Structure** ➔ **Project** ➔ pilih **SDK**).
+4. **Jalankan Program**:
+   - Buka berkas [`src/Main.kt`](src/Main.kt).
+   - Klik ikon panah hijau ▶️ pada baris fungsi `fun main()`, atau klik kanan di editor lalu pilih **Run 'MainKt'** (shortcut: **`Ctrl + Shift + F10`**).
 
 ---
 
 ### Cara 2: Menggunakan Terminal / Command Line (`kotlinc`)
 Pastikan komputer Anda telah terinstal **Kotlin Compiler** (`kotlinc`) dan **Java Runtime Environment** (JRE / JDK 17+).
 
-1. Buka PowerShell atau Command Prompt pada root direktori proyek:
-   ```powershell
-   cd "...\Tugas_OOP_Group_1"
+1. Buka terminal (PowerShell, Command Prompt, atau Terminal Linux/macOS) pada direktori hasil clone:
+   ```bash
+   cd Tugas_OOP_Group_1
    ```
 
-2. Lakukan kompilasi seluruh file sumber Kotlin ke dalam satu berkas JAR:
-   ```powershell
-   $files = (Get-ChildItem -Path src -Filter *.kt -Recurse).FullName
-   kotlinc $files -include-runtime -d build/ecommerce.jar
-   ```
+2. **Kompilasi Seluruh Berkas Kotlin**:
+   - **Windows (PowerShell)**:
+     ```powershell
+     $files = (Get-ChildItem -Path src -Filter *.kt -Recurse).FullName
+     kotlinc $files -include-runtime -d ecommerce.jar
+     ```
+   - **Linux / macOS / Git Bash**:
+     ```bash
+     kotlinc $(find src -name "*.kt") -include-runtime -d ecommerce.jar
+     ```
+   - **Windows (Command Prompt / CMD)**:
+     ```cmd
+     kotlinc src/product/*.kt src/cart/*.kt src/order/*.kt src/payment/*.kt src/user/*.kt src/system/*.kt src/Main.kt -include-runtime -d ecommerce.jar
+     ```
 
-3. Jalankan aplikasi menggunakan Java:
-   ```powershell
-   java -jar build/ecommerce.jar
+3. **Jalankan Aplikasi**:
+   ```bash
+   java -jar ecommerce.jar
    ```
 
 ---
@@ -406,3 +422,5 @@ Fungsi utama program di `Main.kt` mengeksekusi 14 skenario pengujian komprehensi
    SELURUH DEMONSTRASI FITUR OOP BERHASIL DIJALANKAN!
 ========================================================
 ```
+
+
